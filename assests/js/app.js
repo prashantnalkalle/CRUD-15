@@ -8,13 +8,9 @@ const Updatetodo = document.getElementById('Updatetodo')
 const todocontainer = document.getElementById('todocontainer')
 const spinner = document.getElementById('spinner')
 
-
-
 let todoArr =[]
 
 let Base_url ='https://jsonplaceholder.typicode.com/todos'
-
-
 
 function snackbar(msg,icon){
     swal.fire({
@@ -51,6 +47,9 @@ function fetchtodos (){
         
     }
 
+    spinner.classList.add('d-none')
+
+
 }
 
 fetchtodos()
@@ -66,8 +65,8 @@ function createposts(arr){
 						<td>${ele.userId}</td>
 						<td>${ele.title}</td>
 						<td>${showicon(ele.completed)}</td>
-						<td><i class="fa-regular fa-pen-to-square fa-2x text-success" onclick='Onedit(${ele.id})'></i></td>
-						<td><i class="fa-solid fa-trash fa-2x text-danger" onclick='Onremove(${ele.id})'></i></td>
+						<td><i role='button' class="fa-regular fa-pen-to-square fa-2x text-success" onclick='Onedit(${ele.id})'></i></td>
+						<td><i role='button' class="fa-solid fa-trash fa-2x text-danger" onclick='Onremove(${ele.id})'></i></td>
 		    	    </tr>`
     })
 
@@ -75,7 +74,6 @@ function createposts(arr){
     todocontainer.innerHTML =result
 
 
-    spinner.classList.add('d-none')
 }
 
 
@@ -104,6 +102,10 @@ function onsubmit(ele){
 
             createnewtodo(newtodo,res)
         }
+
+
+        spinner.classList.add('d-none')
+
     }
 
 }
@@ -117,12 +119,11 @@ function createnewtodo(newtodo,res){
 						<td>${newtodo.userId}</td>
 						<td>${newtodo.title}</td>
 						<td>${showicon(newtodo.completed)}</td>
-						<td><i class="fa-regular fa-pen-to-square fa-2x text-success" onclick='Onedit(${res.id})'></i></td>
-						<td><i class="fa-solid fa-trash fa-2x text-danger" onclick='Onremove(${res.id})'></i></td>
+						<td><i role='button' class="fa-regular fa-pen-to-square fa-2x text-success" onclick='Onedit(${res.id})'></i></td>
+						<td><i role='button' class="fa-solid fa-trash fa-2x text-danger" onclick='Onremove(${res.id})'></i></td>
 		    	    `
 
     todocontainer.prepend(tr)
-    spinner.classList.add('d-none')
 
 
     snackbar(`The new todo with id ${res.id} is Added Successfully!!!`,'success')
@@ -229,6 +230,7 @@ function Onremove(id){
     confirmButtonText: "Yes, delete it!"
     }).then((result) => {
     if (result.isConfirmed){
+        spinner.classList.remove('d-none')
         
         let xhr = new XMLHttpRequest()
 
@@ -244,20 +246,12 @@ function Onremove(id){
 
                 snackbar(`The todo Item with id ${removeId} is Removed Successfully!!!`,'success')
             }
+
+            spinner.classList.add('d-none')
+
         }
     }
     });
-
-
-
-
-
-
-
-
-
-
-
 }
 
 
