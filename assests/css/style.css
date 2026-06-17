@@ -1,6 +1,9 @@
 body{
     background-color: aquamarine;
 }
+.highlight{
+    background-color: green;
+}
 
 .spinner{
     position: fixed;

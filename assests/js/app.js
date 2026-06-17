@@ -16,7 +16,7 @@ function snackbar(msg,icon){
     swal.fire({
         title : msg,
         icon : icon,
-        timer : 3000
+        timer : 2000
     })
 }
 
@@ -41,21 +41,17 @@ function fetchtodos (){
     xhr.send(null)
 
     xhr.onload = function(){
-        todoArr = JSON.parse(xhr.response)
+        if(xhr.status >= 200 && xhr.status <= 299){
+            todoArr = JSON.parse(xhr.response)
         
-        createposts(todoArr.reverse())
-        
+            createposts(todoArr.reverse())
+        }
+       
+        spinner.classList.add('d-none')   
     }
-
-    spinner.classList.add('d-none')
-
-
 }
 
 fetchtodos()
-
-
-
 
 function createposts(arr){
     let result = ''
@@ -158,6 +154,10 @@ function Onedit(id){
             Addtodo.classList.add('d-none')
             Updatetodo.classList.remove('d-none')
 
+            todoform.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+            });
 
 
         }
@@ -202,24 +202,27 @@ function onupdate(){
             Updatetodo.classList.add('d-none')
             snackbar(`The  todo with id ${updateId} is Updated Successfully!!!`,'success')
 
+            let row = document.getElementById(updateId)
 
+            row.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+            row.classList.add('highlight');
+
+            setTimeout(() => {
+                row.classList.remove('highlight');
+            }, 4000);
         }
-
      spinner.classList.add('d-none')
-
     }
-
-
-
 }
 
 
 function Onremove(id){
     let removeId =id;
-
     let removeURl = `${Base_url}/${removeId}`
-
-
     Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
@@ -229,36 +232,30 @@ function Onremove(id){
     cancelButtonColor: "#d33",
     confirmButtonText: "Yes, delete it!"
     }).then((result) => {
-    if (result.isConfirmed){
-        spinner.classList.remove('d-none')
-        
-        let xhr = new XMLHttpRequest()
+        if (result.isConfirmed){
+            spinner.classList.remove('d-none')
+            
+            let xhr = new XMLHttpRequest()
 
-        xhr.open('DELETE',removeURl)
+            xhr.open('DELETE',removeURl)
 
-        xhr.send(null)
+            xhr.send(null)
 
-        xhr.onload = function () {
-            if(xhr.status >= 200 && xhr.status <= 299){
-                let tr = document.getElementById(removeId)
+            xhr.onload = function () {
+                if(xhr.status >= 200 && xhr.status <= 299){
+                    let tr = document.getElementById(removeId)
 
-                tr.remove()
+                    tr.remove()
 
-                snackbar(`The todo Item with id ${removeId} is Removed Successfully!!!`,'success')
+                    snackbar(`The todo Item with id ${removeId} is Removed Successfully!!!`,'success')
+                }
+
+                spinner.classList.add('d-none')
+
             }
-
-            spinner.classList.add('d-none')
-
         }
-    }
     });
 }
-
-
-
-
-
-
 
 todoform.addEventListener('submit',onsubmit)
 Updatetodo.addEventListener('click',onupdate)
